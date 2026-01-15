@@ -17,8 +17,7 @@ namespace MovieRental.Rental
 			await _movieRentalDb.SaveChangesAsync();
 			return rental;
 		}
-
-		//TODO: finish this method and create an endpoint for it
+		
 		public IEnumerable<Rental> GetRentalsByCustomerName(string customerName)
 		{
 			return _movieRentalDb.Rentals.Where(x => x.CustomerName == customerName);

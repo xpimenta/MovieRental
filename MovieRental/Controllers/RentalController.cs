@@ -15,14 +15,7 @@ namespace MovieRental.Controllers
         {
             _features = features;
         }
-
-
-        [HttpPost]
-        public IActionResult Post([FromBody] Rental.Rental rental)
-        {
-	        return Ok(_features.Save(rental));
-        }
-
+        
         [HttpGet]
         public IActionResult GetRentalsByCustomerName(string customerName)
         {
@@ -31,6 +24,12 @@ namespace MovieRental.Controllers
                 return BadRequest();
             }
             return Ok(_features.GetRentalsByCustomerName(customerName));
+        }
+
+        [HttpPost]
+        public IActionResult Post([FromBody] Rental.Rental rental)
+        {
+	        return Ok(_features.Save(rental));
         }
 	}
 }

@@ -15,13 +15,21 @@ namespace MovieRental.Controllers
         {
             _features = features;
         }
-
+        
+        [HttpGet]
+        public IActionResult GetRentalsByCustomerName(string customerName)
+        {
+            if (string.IsNullOrEmpty(customerName))
+            {
+                return BadRequest();
+            }
+            return Ok(_features.GetRentalsByCustomerName(customerName));
+        }
 
         [HttpPost]
         public IActionResult Post([FromBody] Rental.Rental rental)
         {
 	        return Ok(_features.Save(rental));
         }
-
 	}
 }

@@ -1,3 +1,4 @@
+using MovieRental.Customer;
 using MovieRental.Data;
 using MovieRental.Movie;
 using MovieRental.Rental;
@@ -10,6 +11,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddEntityFrameworkSqlite().AddDbContext<MovieRentalDbContext>();
 
 builder.Services.AddScoped<IRentalFeatures, RentalFeatures>();
+builder.Services.AddScoped<IMovieFeatures, MovieFeatures>();
+builder.Services.AddScoped<ICustomerFeatures, CustomerFeatures>();
 
 var app = builder.Build();
 

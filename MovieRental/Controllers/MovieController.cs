@@ -1,16 +1,16 @@
+using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using MovieRental.Movie;
+using MovieRental.Notification;
 
 namespace MovieRental.Controllers
 {
-    [ApiController]
     [Route("[controller]")]
-    public class MovieController : ControllerBase
+    public class MovieController : MainController
     {
-
         private readonly IMovieFeatures _features;
-
-        public MovieController(IMovieFeatures features)
+        
+        public MovieController(IMovieFeatures features, INotifier notifier) : base(notifier)
         {
             _features = features;
         }
@@ -22,9 +22,14 @@ namespace MovieRental.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] Movie.Movie movie)
+        public async Task<IActionResult> Post([FromBody] Movie.Movie movie)
         {
-	        return Ok(_features.Save(movie));
+            Movie.Movie saveMovie = await _features.Save(movie);
+            if (saveMovie == null)
+            {
+                return CustomResponse();
+            }
+            return CustomResponse(HttpStatusCode.Created, saveMovie);
         }
     }
 }

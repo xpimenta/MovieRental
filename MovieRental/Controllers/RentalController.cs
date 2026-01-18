@@ -1,17 +1,16 @@
+using System.Net;
 using Microsoft.AspNetCore.Mvc;
-using MovieRental.Movie;
+using MovieRental.Notification;
 using MovieRental.Rental;
 
 namespace MovieRental.Controllers
 {
-    [ApiController]
     [Route("[controller]")]
-    public class RentalController : ControllerBase
+    public class RentalController : MainController
     {
-
         private readonly IRentalFeatures _features;
 
-        public RentalController(IRentalFeatures features)
+        public RentalController(IRentalFeatures features, INotifier notifier) : base(notifier)
         {
             _features = features;
         }
@@ -27,9 +26,13 @@ namespace MovieRental.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] Rental.Rental rental)
+        public async Task<IActionResult> Post([FromBody] Rental.Rental rental)
         {
-	        return Ok(_features.Save(rental));
+            Rental.Rental saveRental = await _features.Save(rental);
+            if (saveRental == null)
+                return CustomResponse();
+   
+	        return CustomResponse(HttpStatusCode.Created, saveRental);
         }
 	}
 }

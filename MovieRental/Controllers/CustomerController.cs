@@ -1,14 +1,15 @@
+using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using MovieRental.Customer;
+using MovieRental.Notification;
 
 namespace MovieRental.Controllers;
 
-[ApiController]
 [Route("[controller]")]
-public class CustomerController : ControllerBase
+public class CustomerController : MainController
 {
     private readonly ICustomerFeatures  _features;
-    public CustomerController(ICustomerFeatures  features)
+    public CustomerController(ICustomerFeatures  features, INotifier notifier) : base(notifier)
     {
         _features =  features;
     }
@@ -20,8 +21,13 @@ public class CustomerController : ControllerBase
     }
 
     [HttpPost()]
-    public ActionResult Post([FromBody] Customer.Customer customer)
+    public async Task<IActionResult> Post([FromBody] Customer.Customer customer)
     {
-        return Ok(_features.Save(customer));
+        Customer.Customer saveCustomer = await _features.Save(customer);
+        if (saveCustomer == null)
+        {
+            return CustomResponse();
+        }
+        return CustomResponse(HttpStatusCode.Created,  saveCustomer);
     }
 }

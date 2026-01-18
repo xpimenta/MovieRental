@@ -1,11 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MovieRental.Shared;
 
 namespace MovieRental.Movie
 {
-	public class Movie
+	public class Movie : Entity
 	{
-		[Key]
-		public int Id { get; set; }
 		public string Title { get; set; }
 
 	}

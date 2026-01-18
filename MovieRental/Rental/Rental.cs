@@ -1,13 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using MovieRental.Shared;
 
 namespace MovieRental.Rental
 {
-	public class Rental
+	public class Rental : Entity
 	{
-		[Key]
-		public int Id { get; set; }
 		public int DaysRented { get; set; }
+		public int Amount { get; set; }
 		public Movie.Movie? Movie { get; set; }
 
 		[ForeignKey("Movie")]

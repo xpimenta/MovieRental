@@ -1,10 +1,8 @@
-using System.ComponentModel.DataAnnotations;
+using MovieRental.Shared;
 
 namespace MovieRental.Customer;
 
-public class Customer
+public class Customer : Entity
 {
-    [Key]
-    public int Id { get; set; }
     public string? Name { get; set; }
 }

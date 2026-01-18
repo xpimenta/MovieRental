@@ -1,11 +1,14 @@
-﻿namespace MovieRental.PaymentProviders
+﻿using MovieRental.Payment;
+
+namespace MovieRental.PaymentProviders
 {
-    public class PayPalProvider
+    public class PayPalProvider: IPaymentProvider
     {
         public Task<bool> Pay(double price)
         {
             //ignore this implementation
             return Task.FromResult<bool>(true);
         }
+        public PaymentMethod PaymentMethod => PaymentMethod.PayPay;
     }
 }

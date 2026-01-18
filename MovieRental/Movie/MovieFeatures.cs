@@ -1,19 +1,30 @@
-﻿using MovieRental.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using MovieRental.Data;
+using MovieRental.Notification;
+using MovieRental.Shared;
 
 namespace MovieRental.Movie
 {
-    public class MovieFeatures : IMovieFeatures
+    public class MovieFeatures : BaseFeature, IMovieFeatures
     {
         private readonly MovieRentalDbContext _movieRentalDb;
-        public MovieFeatures(MovieRentalDbContext movieRentalDb)
+        public MovieFeatures(MovieRentalDbContext movieRentalDb, INotifier notifier) : base(notifier)
         {
             _movieRentalDb = movieRentalDb;
         }
 		
-        public Movie Save(Movie movie)
+        public async Task<Movie> Save(Movie movie)
         {
+            if (!ExecuteValidation(new MovieValidation(), movie)) return null;
+            
+            if(await _movieRentalDb.Movies.AnyAsync(m => m.Title == movie.Title))
+            {
+                Notify("Movie already exists");
+                return null;
+            }
+            
             _movieRentalDb.Movies.Add(movie);
-            _movieRentalDb.SaveChanges();
+            await _movieRentalDb.SaveChangesAsync();
             return movie;
         }
 
@@ -27,8 +38,8 @@ namespace MovieRental.Movie
         public List<Movie> GetAll(int pageNumber = 1, int pageSize = 10)
         {
             return _movieRentalDb.Movies
-                .Skip((pageNumber - 1) * pageSize) // pula os registros das páginas anteriores
-                .Take(pageSize)                     // pega apenas pageSize registros
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize) 
                 .ToList();
         }
     }
